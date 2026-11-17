@@ -53,7 +53,3 @@ python main.py
 
 1. **Entropy ($\mathbf{E}$):** Calculated by multiplying the password length ($L$) by the base-2 logarithm of the character pool size ($R$). Each bit added exponentially increases the time required for brute-force attacks.
 2. **Security:** Built using Python's `secrets` module instead of the standard `random` module to ensure pseudo-random number generation is cryptographically strong.
-
-```
-
-```
