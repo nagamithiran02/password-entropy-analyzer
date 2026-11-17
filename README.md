@@ -22,7 +22,6 @@ password-entropy-analyzer/
 ├── analyzer.py          # Entropy formulas, pattern checks, and dictionary lookups
 ├── generator.py         # Secure random password and passphrase generators
 └── common_passwords.txt # Local blacklist of common/weak passwords
- HEAD
 
 ```
 
