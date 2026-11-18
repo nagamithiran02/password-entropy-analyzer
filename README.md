@@ -39,6 +39,8 @@ password-entropy-analyzer/
 * **Information Theory:** Shannon Entropy modeling ($E = L \times \log_2(R)$)
 * **Performance:** $O(1)$ dictionary lookup optimization for local breach blacklists
 
+---
+
 ## 📦 Requirements & Installation
 
 * **Python 3.x** installed on your system.
