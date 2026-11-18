@@ -1,44 +1,50 @@
 import secrets
 import string
 
-def generate_secure_password(length=16):
-    """Generate a cryptographically secure random password containing a mix of character types."""
+def generate_cryptographic_token(length: int = 16) -> str:
+    """
+    Generates a cryptographically strong pseudo-random password token utilizing
+    the secrets module, guaranteeing minimum inclusion criteria across character classes.
+    """
     if length < 8:
-        length = 8  # Enforcea safe minimum length
+        length = 8  # Enforce structural minimum length constraint
 
-    # Define character pools
-    lowercase = string.ascii_lowercase
-    uppercase = string.ascii_uppercase
-    digits = string.digits
-    symbols = string.punctuation
+    lowercase_set = string.ascii_lowercase
+    uppercase_set = string.ascii_uppercase
+    digit_set     = string.digits
+    symbol_set    = string.punctuation
 
-    # Ensure at least one character from each category
-    password_chars = [
-        secrets.choice(lowercase),
-        secrets.choice(uppercase),
-        secrets.choice(digits),
-        secrets.choice(symbols)
+    # Ensure mandatory representation from all four primary character classes
+    token_chars = [
+        secrets.choice(lowercase_set),
+        secrets.choice(uppercase_set),
+        secrets.choice(digit_set),
+        secrets.choice(symbol_set)
     ]
 
-    # Fill the rest of the length with a combined pool
-    all_pool = lowercase + uppercase + digits + symbols
+    # Fill remaining length quota from unified character space
+    unified_pool = lowercase_set + uppercase_set + digit_set + symbol_set
     for _ in range(length - 4):
-        password_chars.append(secrets.choice(all_pool))
+        token_chars.append(secrets.choice(unified_pool))
 
-    # Shuffle the characters securely so predictable patterns don't form
-    secrets.SystemRandom().shuffle(password_chars)
+    # Cryptographically randomize sequence order to prevent positional bias
+    secure_rng = secrets.SystemRandom()
+    secure_rng.shuffle(token_chars)
 
-    return "".join(password_chars)
+    return "".join(token_chars)
 
-def generate_passphrase(num_words=4):
-    """Generate an entropic passphrase using a small wordlist."""
-    wordlist = [
+def construct_diceware_passphrase(word_count: int = 4) -> str:
+    """
+    Constructs a high-entropy passphrase using a curated vocabulary corpus
+    joined by cryptographically selected delimiter symbols.
+    """
+    vocabulary_corpus = [
         "apple", "brave", "delta", "eagle", "frost", "ghost", "helix",
         "iron", "jungle", "karma", "lunar", "matrix", "nova", "orbit", "prism",
         "quantum", "radar", "signal", "titan", "umbra", "vortex", "warp", "xenon"
     ]
 
-    chosen_words = [secrets.choice(wordlist) for _ in range(num_words)]
-    # Join with a secure random seperator symbol or dash
-    seperator = secrets.choice(["-", "_", ".", "@"])
-    return seperator.join(chosen_words)
+    selected_tokens = [secrets.choice(vocabulary_corpus) for _ in range(word_count)]
+    delimiter = secrets.choice(["-", "_", ".", "@"])
+    
+    return delimiter.join(selected_tokens)

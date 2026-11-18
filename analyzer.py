@@ -2,72 +2,77 @@ import math
 import string
 import os
 
-def calculate_pool_size(password):
-    """Determine the character pool size (R) based on character types present."""
-    has_lower = any(c in string.ascii_lowercase for c in password)
-    has_upper = any(c in string.ascii_uppercase for c in password)
-    has_digits = any(c in string.digits for c in password)
-    has_symbols = any(c in string.punctuation for c in password)
+def _determine_character_space(credential: str) -> int:
+    """
+    Computes the total active character pool size (R) based on 
+    comprehensive charset inclusion criteria for Shannon entropy analysis.
+    """
+    has_lowercase = any(char in string.ascii_lowercase for char in credential)
+    has_uppercase = any(char in string.ascii_uppercase for char in credential)
+    has_digits    = any(char in string.digits for char in credential)
+    has_symbols   = any(char in string.punctuation for char in credential)
     
-    pool_size = 0
-    if has_lower:
-        pool_size += 26
-    if has_upper:
-        pool_size += 26
-    if has_digits:
-        pool_size += 10
-    if has_symbols:
-        pool_size += len(string.punctuation)
+    radix = 0
+    if has_lowercase: radix += 26
+    if has_uppercase: radix += 26
+    if has_digits:    radix += 10
+    if has_symbols:   radix += len(string.punctuation)
         
-    return pool_size
+    return radix
 
-def calculate_entropy(password):
-    """Calculate bits of entropy for a given password string."""
-    if not password:
+def evaluate_shannon_entropy(credential: str) -> float:
+    """
+    Calculates the Shannon entropy (in bits) of a given credential string.
+    Formula: H = L * log2(R)
+    where L is length and R is the character space cardinality.
+    """
+    if not credential:
         return 0.0
     
-    length = len(password)
-    pool_size = calculate_pool_size(password)
+    length = len(credential)
+    radix = _determine_character_space(credential)
     
-    if pool_size == 0:
+    if radix == 0:
         return 0.0
     
-    # E = L * log2(R)
-    entropy = length * math.log2(pool_size)
-    return round(entropy, 2)
+    entropy_bits = length * math.log2(radix)
+    return round(entropy_bits, 2)
 
-def check_patterns(password):
-    """Detect common weak structural patterns in the password."""
-    issues = []
+def inspect_structural_vulnerabilities(credential: str) -> list[str]:
+    """
+    Performs heuristic pattern matching to detect common structural weaknesses,
+    repetitive sequences, and predictable keyboard walks.
+    """
+    vulnerabilities = []
     
-    # Check for excessive repeating characters (e.g., 'aaaa', '1111')
-    for i in range(len(password) - 2):
-        if password[i] == password[i+1] == password[i+2]:
-            issues.append("Contains repeating character sequences (e.g., 'aaa')")
+    # Evaluate sequential character repetition (e.g., 'aaa', '111')
+    for idx in range(len(credential) - 2):
+        if credential[idx] == credential[idx+1] == credential[idx+2]:
+            vulnerabilities.append("Identified excessive character repetition sequence")
             break
             
-    # Check for common keyboard walks or predictable strings
-    common_walks = ["12345", "123456", "qwerty", "asdfgh", "zxcvbn", "password", "admin", "abcde"]
-    lower_pwd = password.lower()
-    for walk in common_walks:
-        if walk in lower_pwd:
-            issues.append(f"Contains predictable pattern/walk ('{walk}')")
+    # Check against common structural keyboard walks
+    known_walks = ["12345", "123456", "qwerty", "asdfgh", "zxcvbn", "password", "admin", "abcde"]
+    lowered_cred = credential.lower()
+    for walk in known_walks:
+        if walk in lowered_cred:
+            vulnerabilities.append(f"Contains predictable keyboard walk or common token ('{walk}')")
             break
             
-    return issues
+    return vulnerabilities
 
-def check_dictionary(password, filepath="common_passwords.txt"):
-    """Check if password matches any entry in the local common passwords file."""
-    if not os.path.exists(filepath):
+def cross_reference_breach_corpus(credential: str, corpus_filepath: str = "common_passwords.txt") -> bool:
+    """
+    Performs O(1) average-time set lookup against a local corpus 
+    of compromised or high-frequency weak passwords.
+    """
+    if not os.path.exists(corpus_filepath):
         return False
         
     try:
-        with open(filepath, "r", encoding="utf-8") as f:
-            # Build a set of stripped, lowercase common passwords for fast lookup
-            common_words = {line.strip().lower() for line in f if line.strip()}
-            if password.lower() in common_words:
-                return True
+        with open(corpus_filepath, "r", encoding="utf-8") as file_corpus:
+            compromised_set = {line.strip().lower() for line in file_corpus if line.strip()}
+            return credential.lower() in compromised_set
     except Exception:
-        pass
-        
-    return False
+        # Fail safe if I/O exceptions occur
+        return False
