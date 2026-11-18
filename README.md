@@ -1,4 +1,10 @@
 ```markdown
+# CipherGuard — Password Strength & Breach-Pattern Analyzer
+
+![Python Version](https://img.shields.io/badge/python-3.x-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Security](https://img.shields.io/badge/crypto-CSPRNG-orange.svg)
+
 # Password Strength & Breach-Pattern Analyzer
 
 A robust, modular Python security tool designed to evaluate password strength using cryptographic entropy calculations, structural heuristic warnings, and local blacklist breach detection.
@@ -27,6 +33,12 @@ password-entropy-analyzer/
 
 ---
 
+## 🛠️ Tech Stack & Design Choices
+* **Core Language:** Python (Strict Type Hints & Modular Architecture)
+* **Cryptographic Engine:** Standard `secrets` module (CSPRNG vs. pseudo-random `random`)
+* **Information Theory:** Shannon Entropy modeling ($E = L \times \log_2(R)$)
+* **Performance:** $O(1)$ dictionary lookup optimization for local breach blacklists
+
 ## 📦 Requirements & Installation
 
 * **Python 3.x** installed on your system.
@@ -48,6 +60,8 @@ python main.py
 
 
 ---
+
+
 
 ## 💡 How It Works (Under the Hood)
 
