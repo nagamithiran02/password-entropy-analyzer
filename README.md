@@ -21,7 +21,7 @@ A robust, modular Python security tool designed to evaluate password strength us
 
 ## 🛠️ Project Structure
 
-```text
+```
 password-entropy-analyzer/
 │
 ├── main.py              # CLI interface and user interaction loops
